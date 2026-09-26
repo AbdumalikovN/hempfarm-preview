@@ -73,7 +73,7 @@
       if (dots[i]) { dots[i].classList.remove('is-active'); void dots[i].offsetWidth; dots[i].classList.add('is-active'); }
       var im = slides[i].querySelector('img'); if (im && im.loading === 'lazy') im.loading = 'eager';
     }
-    function play() { stop(); if (!reduce) timer = setInterval(function () { go(i + 1); }, DUR); }
+    function play() { stop(); if (!reduce) timer = setInterval(function () { if (document.documentElement.classList.contains('intro') || document.hidden) return; go(i + 1); }, DUR); }
     function stop() { if (timer) clearInterval(timer); timer = null; }
     dots.forEach(function (d, k) { d.addEventListener('click', function () { go(k); play(); }); });
     box.addEventListener('mouseenter', function () { stop(); box.classList.add('is-paused'); });
