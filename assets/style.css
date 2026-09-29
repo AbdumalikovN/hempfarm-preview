@@ -1363,12 +1363,12 @@ html[lang="uz"] .lbl,html[lang="uz"] .h-sec,html[lang="uz"] .st-title,html[lang=
 @media (max-width:640px){.timeline.timeline--5{grid-template-columns:1fr}.timeline--5 .tl-item{border-left:none;padding-left:0}.timeline--5 .tl-item::before{left:0}}
 
 /* ================= ГЛАВНАЯ: СВЕТЛЫЙ ПЕРВЫЙ ЭКРАН (сентябрь 2026) ================= */
-.hero.hero--light{color:var(--ink);background:#f3f0e6}
+.hero.hero--light{color:var(--ink);background:#e9e5d7}
 .hero--light .hero-glow{display:none}
-.hero--light .hero-bg{opacity:1;filter:none;background-size:cover;background-position:center 18%;animation:kb 46s ease-in-out infinite alternate}
+.hero--light .hero-bg{opacity:1;filter:saturate(1.08) contrast(1.04);background-size:cover;background-position:center 18%;animation:kb 46s ease-in-out infinite alternate}
 .hero--light .hero-bg::after{background:
-  linear-gradient(90deg,rgba(246,243,234,.97) 0%,rgba(246,243,234,.93) 30%,rgba(246,243,234,.62) 52%,rgba(246,243,234,.12) 74%,rgba(246,243,234,0) 100%),
-  linear-gradient(180deg,rgba(246,243,234,.9) 0%,rgba(246,243,234,.25) 22%,rgba(246,243,234,0) 45%,rgba(246,243,234,0) 78%,rgba(246,243,234,.55) 100%)}
+  linear-gradient(90deg,rgba(238,234,220,.88) 0%,rgba(238,234,220,.76) 27%,rgba(238,234,220,.42) 46%,rgba(238,234,220,.1) 64%,rgba(238,234,220,0) 80%),
+  linear-gradient(180deg,rgba(238,234,220,.72) 0%,rgba(238,234,220,.14) 17%,rgba(238,234,220,0) 34%,rgba(238,234,220,0) 82%,rgba(238,234,220,.3) 100%)}
 .hero--light .kicker{color:var(--gold-deep)}
 .hero--light .kicker::before{background:var(--gold-deep)}
 .hero--light h1.display{color:var(--ink)}
@@ -1376,8 +1376,11 @@ html[lang="uz"] .lbl,html[lang="uz"] .h-sec,html[lang="uz"] .st-title,html[lang=
 .hero--light .hero-sub{color:var(--ink)}
 .hero--light .hero-lead{color:var(--ink-2)}
 .hero--light .hero-grid{padding-bottom:96px}
+.hero--light .kicker,.hero--light .hero-lead,.hero--light .hero-sub{text-shadow:0 0 16px rgba(238,234,220,.95),0 0 3px rgba(238,234,220,.7)}
+.hero--light .hero-lead{color:#27352c}
+.hero--light h1.display em{color:#8d6d33}
 @media (max-width:640px){.hero.hero--light .hero-bg{background-image:url("photos/hero-field-m.jpg?v=20260926a")!important;background-position:center top}
-  .hero--light .hero-bg::after{background:linear-gradient(180deg,rgba(246,243,234,.96) 0%,rgba(246,243,234,.9) 48%,rgba(246,243,234,.55) 72%,rgba(246,243,234,.2) 100%)}}
+  .hero--light .hero-bg::after{background:linear-gradient(180deg,rgba(238,234,220,.84) 0%,rgba(238,234,220,.7) 46%,rgba(238,234,220,.34) 70%,rgba(238,234,220,.08) 100%)}}
 
 /* шапка поверх светлого героя: тёмный текст до прокрутки */
 .home .top:not(.is-solid) .brand .logo-light{opacity:0}
@@ -1415,7 +1418,7 @@ html[lang="uz"] .lbl,html[lang="uz"] .h-sec,html[lang="uz"] .st-title,html[lang=
 /* ---- light hero: counters on a frosted panel ---- */
 .hero--light .statline{border-top:0;padding-bottom:40px}
 .hero--light .statline .container{max-width:1192px;width:calc(100% - 48px);padding:0;
-  background:rgba(251,250,245,.84);-webkit-backdrop-filter:blur(16px) saturate(1.15);backdrop-filter:blur(16px) saturate(1.15);
+  background:rgba(248,246,238,.8);-webkit-backdrop-filter:blur(16px) saturate(1.15);backdrop-filter:blur(16px) saturate(1.15);
   border:1px solid rgba(21,32,26,.08);border-radius:var(--r);box-shadow:0 24px 60px -34px rgba(30,45,30,.45)}
 .hero--light .statline .stat,.hero--light .statline .stat:first-child,.hero--light .statline--5 .stat:nth-child(odd){padding:24px 24px 26px;border-left-color:rgba(21,32,26,.1)}
 .hero--light .statline .stat .num{color:var(--g700)}
@@ -1727,3 +1730,14 @@ header.site .header-right .header-cta{padding:10px 16px}
   .spec-table tr:hover td{background:none}
   .spec-table.st-lbl td:not(:first-child)::before{content:attr(data-label);display:block;font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-deep);margin-top:6px}
 }
+
+/* ---- WeChat: QR popover ---- */
+.wechat-pop--qr{min-width:0;width:220px;padding:14px 14px 12px;display:flex;flex-direction:column;align-items:center;gap:8px;left:50%;transform:translate(calc(-50% + var(--dx,0px)),6px)}
+.wechat.open .wechat-pop--qr{transform:translate(calc(-50% + var(--dx,0px)),0)}
+.wechat-pop--qr::after{left:calc(50% - var(--dx,0px))}
+.wechat-pop--qr b{margin:0}
+.wechat-pop--qr img{width:168px;height:168px;border-radius:10px;background:#fff;padding:6px;display:block}
+.wechat-pop--qr .wq-note{font-size:12px;line-height:1.4;color:var(--cream-70)}
+.wechat-pop--qr .wq-link{font-size:12.5px!important}
+.wechat-pop--qr.is-below{bottom:auto;top:calc(100% + 10px)}
+.wechat-pop--qr.is-below::after{top:auto;bottom:100%;border-top-color:transparent;border-bottom-color:var(--g900)}
