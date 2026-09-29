@@ -1379,7 +1379,7 @@ html[lang="uz"] .lbl,html[lang="uz"] .h-sec,html[lang="uz"] .st-title,html[lang=
 .hero--light .kicker,.hero--light .hero-lead,.hero--light .hero-sub{text-shadow:0 0 16px rgba(238,234,220,.95),0 0 3px rgba(238,234,220,.7)}
 .hero--light .hero-lead{color:#27352c}
 .hero--light h1.display em{color:#8d6d33}
-@media (max-width:640px){.hero.hero--light .hero-bg{background-image:url("photos/hero-field-m.jpg?v=20260926a")!important;background-position:center top}
+@media (max-width:640px){.hero.hero--light .hero-bg{background-image:url("photos/hero-field-m.jpg?v=20260929a")!important;background-position:center top}
   .hero--light .hero-bg::after{background:linear-gradient(180deg,rgba(238,234,220,.84) 0%,rgba(238,234,220,.7) 46%,rgba(238,234,220,.34) 70%,rgba(238,234,220,.08) 100%)}}
 
 /* шапка поверх светлого героя: тёмный текст до прокрутки */
@@ -1645,7 +1645,7 @@ header.site .header-right .header-cta{padding:10px 16px}
 .dk{position:relative;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
 .dk-stage{position:relative;aspect-ratio:1/1.02;perspective:1400px;touch-action:pan-y}
 .dk-doc{position:absolute;left:50%;top:50%;width:52%;aspect-ratio:910/1287;padding:0;border:0;background:none;cursor:pointer;
-  transform:translate(-50%,-50%) translate(var(--x,0),var(--y,0)) rotate(var(--r,0deg)) scale(var(--s,1));z-index:var(--z,1);
+  transform:translate(-50%,-50%) translate(var(--x,0),var(--y,0)) translateY(var(--py,0%)) rotate(var(--r,0deg)) scale(var(--s,1));z-index:var(--z,1);
   transition:transform .75s cubic-bezier(.2,.8,.2,1),filter .6s,opacity .6s;filter:brightness(var(--b,1)) saturate(var(--sat,1));opacity:var(--o,1);will-change:transform}
 .dk-paper{position:absolute;inset:0;display:block;border-radius:6px;overflow:hidden;background:#fdfcf8;
   box-shadow:0 1px 0 rgba(255,255,255,.6) inset,0 30px 60px -28px rgba(0,0,0,.65),0 8px 18px -10px rgba(0,0,0,.35);transition:box-shadow .6s}
@@ -1741,3 +1741,26 @@ header.site .header-right .header-cta{padding:10px 16px}
 .wechat-pop--qr .wq-link{font-size:12.5px!important}
 .wechat-pop--qr.is-below{bottom:auto;top:calc(100% + 10px)}
 .wechat-pop--qr.is-below::after{top:auto;bottom:100%;border-top-color:transparent;border-bottom-color:var(--g900)}
+/* ---- wide photo cards in hscroll (process: plant gallery) ---- */
+.hs-card--wide{width:clamp(280px,34vw,440px)}
+.hs-card--wide .img{aspect-ratio:4/3}
+.hs-card figcaption{margin-top:12px;font-size:13.5px;line-height:1.4;color:var(--muted)}
+.sec--dark .hs-card figcaption{color:var(--cream-70)}
+.sec--dark .hs-btn{color:var(--cream);border-color:rgba(242,238,226,.28)}
+.sec--dark .hs-btn:hover{background:var(--cream);color:var(--g950);border-color:var(--cream)}
+.sec--dark .hs-btn:disabled{background:transparent;color:var(--cream)}
+@media (max-width:640px){.hs-card--wide{width:84vw}}
+
+/* doc stack: hover only lifts a back document; click brings it forward; front real doc opens full size */
+.dk-doc.is-peek{--py:-5%;filter:brightness(.97)}
+.dk-doc.is-peek .dk-paper{box-shadow:0 0 0 1px rgba(201,168,106,.55),0 36px 70px -28px rgba(0,0,0,.7),0 10px 22px -10px rgba(0,0,0,.4)}
+.dk-doc.is-front{cursor:default}
+.dk-doc.is-front:not(.dk-doc--tpl){cursor:zoom-in}
+.dk-doc:focus-visible{outline:none}
+.dk-doc:focus-visible .dk-paper{box-shadow:0 0 0 2px var(--gold),0 30px 60px -28px rgba(0,0,0,.65)}
+.dk-ctrl{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:12px}
+.dk-ctrl .dk-dots{margin-top:0}
+.dk-arr{width:40px;height:40px;border-radius:50%;border:1px solid rgba(242,238,226,.28);background:transparent;color:var(--cream);font-size:16px;cursor:pointer;transition:background .25s,color .25s,border-color .25s}
+.dk-arr:hover{background:var(--cream);color:var(--g950);border-color:var(--cream)}
+.dk-dots button{position:relative}
+.dk-dots button::before{content:"";position:absolute;inset:-10px -3px}

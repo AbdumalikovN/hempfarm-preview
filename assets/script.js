@@ -374,11 +374,13 @@
   })();
 
 
-  /* ---- стопка документов (Партнёрам): наведение/тап выводит документ вперёд, остальные уходят назад ---- */
+  /* ---- стопка документов (Экспорт): документ выходит вперёд по клику/тапу, стрелкам или точкам.
+     Наведение на задний документ лишь приподнимает его (без перестановки), поэтому стопка не «перелистывается» под курсором.
+     Клик по переднему документу открывает его крупно. Автопрокрутка стоит, пока курсор над стопкой, и после выбора пользователем. ---- */
   document.querySelectorAll('[data-docstack]').forEach(function (dk) {
     var docs = [].slice.call(dk.querySelectorAll('.dk-doc')), dots = [].slice.call(dk.querySelectorAll('.dk-dots button'));
-    var cap = dk.querySelector('.dk-cap'), n = docs.length, cur = 0, timer = null, hover = false, seen = false;
-    var narrow = window.matchMedia('(max-width: 760px)');
+    var cap = dk.querySelector('.dk-cap'), n = docs.length, cur = 0, timer = null, hover = false, seen = false, userAt = 0;
+    var narrow = window.matchMedia('(max-width: 760px)'), canHover = window.matchMedia('(hover: hover)');
     function layout() {
       var step = narrow.matches ? 15 : 19;
       docs.forEach(function (d, i) {
@@ -392,10 +394,11 @@
         d.style.setProperty('--b', k === 0 ? 1 : (0.8 - a * 0.06).toFixed(2));
         d.style.setProperty('--o', vis ? 1 : 0);
         d.classList.toggle('is-front', k === 0);
+        d.classList.remove('is-peek');
         d.tabIndex = vis ? 0 : -1;
         d.setAttribute('aria-pressed', k === 0 ? 'true' : 'false');
       });
-      dots.forEach(function (b, i) { b.classList.toggle('is-on', i === cur); });
+      dots.forEach(function (b, i) { b.classList.toggle('is-on', i === cur); b.setAttribute('aria-current', i === cur ? 'true' : 'false'); });
       var f = docs[cur];
       if (cap) {
         cap.innerHTML = '<span class="dk-st">' + f.getAttribute('data-status') + '</span><b>' + f.getAttribute('data-title') + '</b><span class="dk-desc">' + f.getAttribute('data-desc') + '</span>';
@@ -403,23 +406,38 @@
       }
     }
     function go(i) { i = (i + n) % n; if (i === cur) return; cur = i; layout(); }
-    function auto() { clearInterval(timer); timer = setInterval(function () { if (!hover && seen && !document.hidden) go(cur + 1); }, 3800); }
+    function pick(i) { userAt = Date.now(); go(i); }
+    function auto() {
+      clearInterval(timer);
+      timer = setInterval(function () {
+        if (hover || !seen || document.hidden || Date.now() - userAt < 12000) return;
+        go(cur + 1);
+      }, 4200);
+    }
     docs.forEach(function (d, i) {
-      d.addEventListener('mouseenter', function () { if (window.matchMedia('(hover: hover)').matches) { hover = true; go(i); } });
-      d.addEventListener('focus', function () { go(i); });
-      d.addEventListener('click', function () { go(i); auto(); });
+      d.addEventListener('mouseenter', function () { if (canHover.matches && !d.classList.contains('is-front')) d.classList.add('is-peek'); });
+      d.addEventListener('mouseleave', function () { d.classList.remove('is-peek'); });
+      d.addEventListener('click', function () {
+        if (d.classList.contains('is-front')) {
+          var im = d.querySelector('img');
+          if (im && window.hfOpenLightbox) window.hfOpenLightbox(im.currentSrc || im.src, im.alt);
+          userAt = Date.now();
+        } else pick(i);
+      });
     });
-    dk.addEventListener('mouseleave', function () { hover = false; auto(); });
-    dots.forEach(function (b, i) { b.addEventListener('click', function () { go(i); auto(); }); });
+    dk.addEventListener('mouseenter', function () { if (canHover.matches) hover = true; });
+    dk.addEventListener('mouseleave', function () { hover = false; });
+    dots.forEach(function (b, i) { b.addEventListener('click', function () { pick(i); }); });
+    [].forEach.call(dk.querySelectorAll('.dk-arr'), function (b) { b.addEventListener('click', function () { pick(cur + (+b.getAttribute('data-dir') || 1)); }); });
     dk.addEventListener('contextmenu', function (e) { e.preventDefault(); });
     dk.addEventListener('dragstart', function (e) { e.preventDefault(); });
     var sx = null;
     dk.addEventListener('touchstart', function (e) { sx = e.touches[0].clientX; }, { passive: true });
     dk.addEventListener('touchend', function (e) {
       if (sx === null) return; var dx = e.changedTouches[0].clientX - sx; sx = null;
-      if (Math.abs(dx) > 40) { go(cur + (dx < 0 ? 1 : -1)); auto(); }
+      if (Math.abs(dx) > 40) pick(cur + (dx < 0 ? 1 : -1));
     }, { passive: true });
-    dk.addEventListener('keydown', function (e) { if (e.key === 'ArrowRight') { go(cur + 1); auto(); } if (e.key === 'ArrowLeft') { go(cur - 1); auto(); } });
+    dk.addEventListener('keydown', function (e) { if (e.key === 'ArrowRight') pick(cur + 1); if (e.key === 'ArrowLeft') pick(cur - 1); });
     if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { seen = es[0].isIntersecting; }, { threshold: 0.3 }).observe(dk); else seen = true;
     if (narrow.addEventListener) narrow.addEventListener('change', layout);
     layout(); if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) auto();
@@ -487,6 +505,7 @@
   if (lb) {
     var lbImg = lb.querySelector('img');
     function openLb(src, alt) { lbImg.src = src.replace(/-sm\.jpg(\?.*)?$/, '.jpg'); lbImg.alt = alt || ''; lb.classList.add('open'); lb.setAttribute('aria-hidden', 'false'); document.body.style.overflow = 'hidden'; }
+    window.hfOpenLightbox = openLb;
     function closeLb() { lb.classList.remove('open'); lb.setAttribute('aria-hidden', 'true'); document.body.style.overflow = ''; }
     document.querySelectorAll('.gallery .img.has-img img, .prod .img.has-img img, .g-item .img.has-img img, .hs-card .img.has-img img').forEach(function (im) {
       im.style.cursor = 'zoom-in';
@@ -544,10 +563,22 @@
     });
   }
 
-  /* ---- WeChat: показать/скрыть подсказку с номером ---- */
+  /* ---- WeChat: QR-код для связи (открывается по кнопке, не выходит за край экрана) ---- */
   document.querySelectorAll('.wechat').forEach(function (w) {
     var btn = w.querySelector('.wechat-btn');
-    btn.addEventListener('click', function (e) { e.stopPropagation(); var open = w.classList.toggle('open'); btn.setAttribute('aria-expanded', open ? 'true' : 'false'); });
+    var pop = w.querySelector('.wechat-pop');
+    function place(vert) {
+      if (!pop) return;
+      pop.style.setProperty('--dx', '0px'); if (vert) pop.classList.remove('is-below');
+      var r = pop.getBoundingClientRect(), pad = 12, dx = 0;
+      if (r.left < pad) dx = pad - r.left; else if (r.right > innerWidth - pad) dx = innerWidth - pad - r.right;
+      pop.style.setProperty('--dx', Math.round(dx) + 'px');
+      if (vert && r.top < 70) pop.classList.add('is-below');
+    }
+    place(false);
+    var rt; addEventListener('resize', function () { clearTimeout(rt); rt = setTimeout(function () { place(w.classList.contains('open')); }, 150); });
+    btn.addEventListener('click', function (e) { e.stopPropagation(); var open = w.classList.toggle('open'); btn.setAttribute('aria-expanded', open ? 'true' : 'false'); if (open) place(true); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && w.classList.contains('open')) { w.classList.remove('open'); btn.setAttribute('aria-expanded', 'false'); } });
   });
   document.addEventListener('click', function (e) { if (!e.target.closest('.wechat')) document.querySelectorAll('.wechat.open').forEach(function (w) { w.classList.remove('open'); w.querySelector('.wechat-btn').setAttribute('aria-expanded', 'false'); }); });
 
