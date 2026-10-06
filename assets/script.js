@@ -56,7 +56,7 @@
   var I18N = {
     ru: { skip: 'Пропустить', tag: 'Техническая конопля · полный цикл', video: 'Видео Hemp Farm', texture: 'Текстура', sending: 'Отправляем…', dec: ',', grp: ' ' },
     en: { skip: 'Skip', tag: 'Industrial hemp · full cycle', video: 'Hemp Farm video', texture: 'Texture', sending: 'Sending…', dec: '.', grp: ',' },
-    uz: { skip: "O'tkazib yuborish", tag: "Texnik kanop · to'liq jarayon", video: 'Hemp Farm videosi', texture: 'Tekstura', sending: 'Yuborilmoqda…', dec: ',', grp: ' ' }
+    uz: { skip: 'Oʻtkazib yuborish', tag: 'Texnik kanop · toʻliq sikl', video: 'Hemp Farm videosi', texture: 'Tekstura', sending: 'Yuborilmoqda…', dec: ',', grp: ' ' }
   }[LANG] || null;
   if (!I18N) I18N = { skip: 'Skip', tag: 'Hemp Farm', video: 'Hemp Farm', texture: 'Texture', sending: '…', dec: ',', grp: ' ' };
 
@@ -305,7 +305,7 @@
       text: {
         ru: { k: 'Важно знать', t: 'Техническая конопля ≠ наркотик', d: 'Чем отличается, как контролируется и почему это законно.', c: 'Читать', h: 'смахните, чтобы скрыть' },
         en: { k: 'Good to know', t: 'Industrial hemp ≠ drug', d: 'How it differs, how it is controlled and why it is legal.', c: 'Read', h: 'swipe to dismiss' },
-        uz: { k: "Bilib qo'ying", t: 'Texnik kanop ≠ giyohvand modda', d: 'Farqi nimada, qanday nazorat qilinadi va nega bu qonuniy.', c: "O'qish", h: 'yopish uchun suring' }
+        uz: { k: 'Bilish muhim', t: 'Texnik kanop (Cannabis sativa L.) ≠ giyohvandlik vositasi', d: 'U nimasi bilan farq qiladi, qanday nazorat qilinadi va nima uchun bu qonuniy hisoblanadi.', c: 'Oʻqish', h: 'yashirish uchun suring' }
       }
     };
     function st(store, k, v) { try { var S = window[store]; if (v === undefined) return S.getItem(k); S.setItem(k, v); } catch (e) { return null; } }
